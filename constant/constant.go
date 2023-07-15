@@ -8,11 +8,14 @@ const (
 	MESSAGE_USAGE = `係咪唔知食乜？我可以幫到你😊！
 唔該用'/add'添加餐廳名稱，每次可添加一個（重複名稱會合併）
 用'/showall'查看當前已添加的所有餐廳名稱
+用'/clear'可以清咗之前輸入嘅餐廳再來過
 然後用'/plan'就可以幫你plan好呢個禮拜每日食乜喇！😋`
 
 	MESSAGE_RESTAURANT_ADDED = "餐廳加咗落list喇："
 
 	MESSAGE_SHOW_ALL_RESTAURANTS = "已添加嘅餐廳有："
+
+	MESSAGE_CLEAR = "幫你清咗D餐廳喇😊麻煩再入過！"
 
 	MESSAGE_PLAN_ERROR = `出現咗個小問題🤔，係咪你未加夠五間餐廳？
 你可以用'/showall'先確認下`

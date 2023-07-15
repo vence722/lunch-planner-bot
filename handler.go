@@ -26,6 +26,9 @@ func MessageHandler(bot *tgbotapi.BotAPI, chatID int64, msg string) error {
 	case "/showall":
 		allRestaurants := store.Restaurants.ListAll()
 		return replyMessage(constant.MESSAGE_SHOW_ALL_RESTAURANTS + "\n" + strings.Join(allRestaurants, "\n"))
+	case "/clear":
+		store.Restaurants.Clear()
+		return replyMessage(constant.MESSAGE_CLEAR)
 	case "/plan":
 		plannedRestaurant, err := store.Restaurants.Plan(5)
 		if err != nil {

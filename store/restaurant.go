@@ -3,24 +3,19 @@ package store
 import (
 	"errors"
 	"math/rand"
-	"time"
 )
 
 var (
-	Restaurants = RestaurantStroe{}
+	Restaurants = restaurantStroe{}
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
+type restaurantStroe map[string]struct{}
 
-type RestaurantStroe map[string]struct{}
-
-func (this *RestaurantStroe) Add(restaurant string) {
+func (this *restaurantStroe) Add(restaurant string) {
 	(*this)[restaurant] = struct{}{}
 }
 
-func (this *RestaurantStroe) ListAll() []string {
+func (this *restaurantStroe) ListAll() []string {
 	var restaurants = make([]string, 0, len(*this))
 	for restaurant := range *this {
 		restaurants = append(restaurants, restaurant)
@@ -28,7 +23,7 @@ func (this *RestaurantStroe) ListAll() []string {
 	return restaurants
 }
 
-func (this *RestaurantStroe) Plan(days int) ([]string, error) {
+func (this *restaurantStroe) Plan(days int) ([]string, error) {
 	if len(*this) < days {
 		return nil, errors.New("not enough items")
 	}
@@ -37,4 +32,10 @@ func (this *RestaurantStroe) Plan(days int) ([]string, error) {
 		allRestaurants[i], allRestaurants[j] = allRestaurants[j], allRestaurants[i]
 	})
 	return allRestaurants[:days], nil
+}
+
+func (this *restaurantStroe) Clear() {
+	for restaurant := range *this {
+		delete(*this, restaurant)
+	}
 }

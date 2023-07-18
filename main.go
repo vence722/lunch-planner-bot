@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	bot.Debug = true
+	bot.Debug = false
 
 	log.Printf("Bot started on account %s\n", bot.Self.UserName)
 

@@ -3,28 +3,43 @@ package store
 import (
 	"errors"
 	"math/rand"
+
+	"github.com/vence722/gcoll/maps"
 )
 
 var (
-	Restaurants = restaurantStroe{}
+	Restaurants *restaurantStore = (*restaurantStore)(maps.NewTypedSyncMap[string, struct{}]())
 )
 
-type restaurantStroe map[string]struct{}
+type restaurantStore maps.TypedSyncMap[string, struct{}]
 
-func (this *restaurantStroe) Add(restaurant string) {
-	(*this)[restaurant] = struct{}{}
+func (this *restaurantStore) Len() int {
+	var l int
+	mThis := (*maps.TypedSyncMap[string, struct{}])(this)
+	mThis.Range(func(_ string, _ struct{}) bool {
+		l += 1
+		return true
+	})
+	return l
 }
 
-func (this *restaurantStroe) ListAll() []string {
-	var restaurants = make([]string, 0, len(*this))
-	for restaurant := range *this {
+func (this *restaurantStore) Add(restaurant string) {
+	mThis := (*maps.TypedSyncMap[string, struct{}])(this)
+	mThis.Store(restaurant, struct{}{})
+}
+
+func (this *restaurantStore) ListAll() []string {
+	var restaurants []string
+	mThis := (*maps.TypedSyncMap[string, struct{}])(this)
+	mThis.Range(func(restaurant string, _ struct{}) bool {
 		restaurants = append(restaurants, restaurant)
-	}
+		return true
+	})
 	return restaurants
 }
 
-func (this *restaurantStroe) Plan(days int) ([]string, error) {
-	if len(*this) < days {
+func (this *restaurantStore) Plan(days int) ([]string, error) {
+	if this.Len() < days {
 		return nil, errors.New("not enough items")
 	}
 	allRestaurants := this.ListAll()
@@ -34,8 +49,10 @@ func (this *restaurantStroe) Plan(days int) ([]string, error) {
 	return allRestaurants[:days], nil
 }
 
-func (this *restaurantStroe) Clear() {
-	for restaurant := range *this {
-		delete(*this, restaurant)
-	}
+func (this *restaurantStore) Clear() {
+	mThis := (*maps.TypedSyncMap[string, struct{}])(this)
+	mThis.Range(func(restaurant string, _ struct{}) bool {
+		mThis.Delete(restaurant)
+		return true
+	})
 }
